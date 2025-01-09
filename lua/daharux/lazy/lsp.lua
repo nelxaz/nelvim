@@ -38,8 +38,8 @@ return {
 								vim.keymap.set('n', '<leader>vrr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
 								vim.keymap.set('n', '<leader>vca', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
 								vim.keymap.set('n', '<leader>vd', '<cmd>lua vim.disagnostic.open_float()<cr>', opts)
-								vim.keymap.set('n', '[d', '<cmd>lua vim.disagnostic.goto_next()<cr>', opts)
-								vim.keymap.set('n', ']d', '<cmd>lua vim.disagnostic.goto_prev()<cr>', opts)
+								vim.keymap.set('n', '[d', '<cmd>lua vim.diagnostic.goto_next()<cr>', opts)
+								vim.keymap.set('n', ']d', '<cmd>lua vim.diagnostic.goto_prev()<cr>', opts)
 						end,
 				})
 
@@ -60,9 +60,9 @@ return {
 								end,
 						},
 						mapping = cmp.mapping.preset.insert({
-								['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-								['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-								['<C-y>'] = cmp.mapping.confirm({ select = true }),
+								['<S-tab>'] = cmp.mapping.select_prev_item(cmp_select),
+								['<tab>'] = cmp.mapping.select_next_item(cmp_select),
+								['<enter>'] = cmp.mapping.confirm({ select = true }),
 								["<C-Space>"] = cmp.mapping.complete(),
 						}),
 						sources = cmp.config.sources({
