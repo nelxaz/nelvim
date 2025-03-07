@@ -37,7 +37,7 @@ return {
 								vim.keymap.set('n', '<leader>vrn', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
 								vim.keymap.set('n', '<leader>vrr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
 								vim.keymap.set('n', '<leader>vca', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
-								vim.keymap.set('n', '<leader>vd', '<cmd>lua vim.disagnostic.open_float()<cr>', opts)
+								vim.keymap.set('n', '<leader>vd', '<cmd>lua vim.diagnostic.open_float()<cr>', opts)
 								vim.keymap.set('n', '[d', '<cmd>lua vim.diagnostic.goto_next()<cr>', opts)
 								vim.keymap.set('n', ']d', '<cmd>lua vim.diagnostic.goto_prev()<cr>', opts)
 						end,
@@ -64,6 +64,7 @@ return {
 								['<tab>'] = cmp.mapping.select_next_item(cmp_select),
 								['<enter>'] = cmp.mapping.confirm({ select = true }),
 								["<C-Space>"] = cmp.mapping.complete(),
+								
 						}),
 						sources = cmp.config.sources({
 								{ name = 'nvim_lsp' },
