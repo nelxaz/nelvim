@@ -1,7 +1,7 @@
 return {
   "nvimtools/none-ls.nvim",
   dependencies = {
-  "nvimtools/none-ls-extras.nvim",
+    "nvimtools/none-ls-extras.nvim",
   },
   opts = function(_, config)
     -- config variable is the default configuration table for the setup function call
@@ -13,7 +13,9 @@ return {
     config.sources = {
       -- Set a formatter
       -- null_ls.builtins.formatting.stylua,
-      null_ls.builtins.formatting.prettierd,
+      null_ls.builtins.formatting.prettierd.with({
+        filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "css", "scss", "html", "json", "yaml", "markdown", "graphql" },
+      }),
       -- require "none-ls.diagnostics.eslint_d",
       -- require "none-ls.formatting.eslint_d",
       -- require "none-ls.code_actions.eslint_d",
@@ -21,4 +23,3 @@ return {
     return config -- return final config table
   end,
 }
-
