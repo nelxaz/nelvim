@@ -9,7 +9,7 @@ return {
       enable = true,
       multi = true,             -- allows multiple fastwraps in one go
       highlight_duration = 200, -- duration of highlight for wrap points
-      { faster = true, map = '<leader>w', cmap = '<leader>w' },
+      { faster = true, map = '<C-s>', cmap = '<C-s>' },
     },
     cmap = true,        -- command-line mode support
     bs = {              -- backspace configuration
