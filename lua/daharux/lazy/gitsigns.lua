@@ -51,7 +51,6 @@ return {
         col = 1
       },
       on_attach                    = function(bufnr)
-        print("Gitsigns on_attach called for buffer: " .. bufnr)
         local vim = vim
         local gitsigns = require('gitsigns')
 
