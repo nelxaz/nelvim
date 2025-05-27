@@ -104,8 +104,23 @@ return {
             }, function(selected)
               if selected then
                 local file_path = selected[2]
-                local custom_prompt = table.concat(vim.fn.readfile(file_path), "\n")
-                chat.ask(custom_prompt)
+                local prompt_name = vim.fn.fnamemodify(file_path, ":t:r")
+
+                -- Create the context command to include the prompt file
+                local context_cmd = "> #file:`" .. file_path .. "`"
+
+                -- Copy to system clipboard ('+' register)
+                vim.fn.setreg('+', context_cmd)
+
+                -- Open chat window
+                chat.toggle()
+
+                -- Let user know which prompt is being used (without notification about clipboard)
+                vim.defer_fn(function()
+                  vim.api.nvim_echo(
+                    { { "Using prompt: '" .. prompt_name .. "' (context copied to clipboard)", "None" } },
+                    false, {})
+                end, 100)
               end
             end)
           else
@@ -113,6 +128,46 @@ return {
           end
         else
           vim.notify("Directory not found: " .. prompt_dir, vim.log.levels.WARN)
+        end
+      end
+
+      -- Custom function to save chat with name
+      local function save_chat_with_name()
+        vim.ui.input({
+          prompt = "Save chat as: ",
+        }, function(input)
+          if input and input ~= "" then
+            vim.cmd("CopilotChatSave " .. input)
+            vim.notify("Chat saved as '" .. input .. "'", vim.log.levels.INFO)
+          end
+        end)
+      end
+
+      -- Custom function to load chat by name
+      local function load_chat_by_name()
+        -- Get list of saved chats
+        local chat_dir = vim.fn.stdpath("data") .. "/copilot-chat"
+        if vim.fn.isdirectory(chat_dir) == 1 then
+          local files = vim.fn.glob(chat_dir .. "/*.json", false, true)
+          if #files > 0 then
+            local chat_names = {}
+            for _, file in ipairs(files) do
+              local name = vim.fn.fnamemodify(file, ":t:r")
+              table.insert(chat_names, name)
+            end
+
+            vim.ui.select(chat_names, {
+              prompt = "Load chat:",
+            }, function(selected)
+              if selected then
+                vim.cmd("CopilotChatLoad " .. selected)
+              end
+            end)
+          else
+            vim.notify("No saved chats found", vim.log.levels.WARN)
+          end
+        else
+          vim.notify("Chat directory not found", vim.log.levels.WARN)
         end
       end
 
@@ -138,6 +193,10 @@ return {
         end
       end, {})
 
+      -- Add save chat with name keymap
+      vim.keymap.set({ 'n' }, '<leader>in', save_chat_with_name, { desc = 'AI Save Chat (Named)' })
+      -- Add load chat by name keymap
+      vim.keymap.set({ 'n' }, '<leader>ib', load_chat_by_name, { desc = 'AI Load Chat (Browse)' })
       vim.keymap.set({ 'n' }, '<leader>ap', open_with_custom_prompt, { desc = 'AI Custom Prompt' })
       vim.keymap.set({ 'n' }, '<leader>aa', chat.toggle, { desc = 'AI Toggle' })
       vim.keymap.set({ 'v' }, '<leader>aa', chat.open, { desc = 'AI Open' })

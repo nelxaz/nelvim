@@ -40,3 +40,10 @@ vim.keymap.set("n", "<leader>vpp", "<cmd>e ~/.config/nvim/lua/config/lazy.lua<CR
 vim.keymap.set("n", "<leader><leader>", function()
   vim.cmd("so")
 end)
+
+-- Add keymap to copy current buffer path to system clipboard
+vim.keymap.set({ 'n' }, '<leader>cp', function()
+  local path = vim.fn.expand('%:p')
+  vim.fn.setreg('+', path)
+  vim.notify("Copied: " .. path, vim.log.levels.INFO)
+end, { desc = 'Copy Buffer Path' })
