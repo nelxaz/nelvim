@@ -202,9 +202,9 @@ return {
       vim.keymap.set({ 'v' }, '<leader>aa', chat.open, { desc = 'AI Open' })
       vim.keymap.set({ 'n' }, '<leader>ax', chat.reset, { desc = 'AI Reset' })
       vim.keymap.set({ 'n' }, '<leader>as', chat.stop, { desc = 'AI Stop' })
-      vim.keymap.set({ 'n' }, '<leader>am', chat.select_model, { desc = 'AI Models' })
-      vim.keymap.set({ 'n' }, '<leader>ag', chat.select_agent, { desc = 'AI Agents' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>asp', chat.select_prompt, { desc = 'AI Prompts' })
+      vim.keymap.set({ 'n' }, '<leader>am', function() chat.select_model() end, { desc = 'AI Models' })
+      vim.keymap.set({ 'n' }, '<leader>ag', function() chat.select_agent() end, { desc = 'AI Agents' })
+      vim.keymap.set({ 'n', 'v' }, '<leader>asp', function() chat.select_prompt() end, { desc = 'AI Prompts' })
       -- Add save chat keymap
       vim.keymap.set({ 'n' }, '<leader>iw', chat.save, { desc = 'AI Save Chat' })
       -- Add load chat keymap
