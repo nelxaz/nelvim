@@ -2,10 +2,10 @@ return {
   {
     "CopilotC-Nvim/CopilotChat.nvim",
     dependencies = {
-      { "zbirenbaum/copilot.lua" },                   -- or zbirenbaum/copilot.lua
+      { "zbirenbaum/copilot.lua" }, -- or zbirenbaum/copilot.lua
       { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
     },
-    build = "make tiktoken",                          -- Only on MacOS or Linux
+    build = "make tiktoken", -- Only on MacOS or Linux
     opts = {
       -- See Configuration section for options
     },
@@ -13,31 +13,31 @@ return {
     config = function()
       local vim = vim
 
-      require('copilot').setup({})
+      require("copilot").setup({})
       -- Copilot autosuggestions
       vim.g.copilot_no_tab_map = true
       vim.g.copilot_hide_during_completion = false
       vim.g.copilot_proxy_strict_ssl = false
-      vim.g.copilot_integration_id = 'vscode-chat'
-      vim.g.copilot_settings = { selectedCompletionModel = 'gpt-4o-copilot' }
-      vim.keymap.set('i', '<S-Tab>', 'copilot#Accept("\\<S-Tab>")', { expr = true, replace_keycodes = false })
+      vim.g.copilot_integration_id = "vscode-chat"
+      vim.g.copilot_settings = { selectedCompletionModel = "gpt-4o-copilot" }
+      vim.keymap.set("i", "<S-Tab>", 'copilot#Accept("\\<S-Tab>")', { expr = true, replace_keycodes = false })
 
       -- Copilot chat
-      local chat = require('CopilotChat')
-      local select = require('CopilotChat.select')
+      local chat = require("CopilotChat")
+      local select = require("CopilotChat.select")
       chat.setup({
-        model = 'claude-3.7-sonnet',
-        references_display = 'write',
+        model = "claude-3.7-sonnet",
+        references_display = "write",
         -- question_header = ' ' .. icons.ui.User .. ' ',
         -- answer_header = ' ' .. icons.ui.Bot .. ' ',
         -- error_header = '> ' .. icons.diagnostics.Warn .. ' ',
         selection = select.visual,
-        context = 'buffers',
+        context = "buffers",
         opts = {},
         mappings = {
           reset = {
-            normal = '',
-            insert = '',
+            normal = "",
+            insert = "",
           },
           show_diff = {
             full_diff = true,
@@ -45,44 +45,40 @@ return {
         },
         prompts = {
           Explain = {
-            mapping = '<leader>ae',
-            description = 'AI Explain',
+            mapping = "<leader>ae",
+            description = "AI Explain",
           },
           Review = {
-            mapping = '<leader>ar',
-            description = 'AI Review',
+            mapping = "<leader>ar",
+            description = "AI Review",
           },
           Tests = {
-            mapping = '<leader>at',
-            description = 'AI Tests',
+            mapping = "<leader>at",
+            description = "AI Tests",
           },
           Fix = {
-            mapping = '<leader>af',
-            description = 'AI Fix',
+            mapping = "<leader>af",
+            description = "AI Fix",
           },
           Optimize = {
-            mapping = '<leader>ao',
-            description = 'AI Optimize',
+            mapping = "<leader>ao",
+            description = "AI Optimize",
           },
           Docs = {
-            mapping = '<leader>ad',
-            description = 'AI Documentation',
+            mapping = "<leader>ad",
+            description = "AI Documentation",
           },
           Commit = {
-            mapping = '<leader>ac',
-            description = 'AI Generate Commit',
+            mapping = "<leader>ac",
+            description = "AI Generate Commit",
             selection = select.buffer,
           },
         },
         providers = {
-          copilot = {
-          },
-          github_models = {
-          },
-          copilot_embeddings = {
-          },
+          copilot = {},
+          github_models = {},
+          copilot_embeddings = {},
         },
-
       })
 
       local function open_with_custom_prompt()
@@ -100,7 +96,9 @@ return {
             -- Use vim.ui.select for better UI
             vim.ui.select(menu, {
               prompt = "Select a prompt:",
-              format_item = function(item) return item[1] end, -- Show the prompt name
+              format_item = function(item)
+                return item[1]
+              end, -- Show the prompt name
             }, function(selected)
               if selected then
                 local file_path = selected[2]
@@ -110,7 +108,7 @@ return {
                 local context_cmd = "> #file:`" .. file_path .. "`"
 
                 -- Copy to system clipboard ('+' register)
-                vim.fn.setreg('+', context_cmd)
+                vim.fn.setreg("+", context_cmd)
 
                 -- Open chat window
                 chat.toggle()
@@ -119,7 +117,9 @@ return {
                 vim.defer_fn(function()
                   vim.api.nvim_echo(
                     { { "Using prompt: '" .. prompt_name .. "' (context copied to clipboard)", "None" } },
-                    false, {})
+                    false,
+                    {}
+                  )
                 end, 100)
               end
             end)
@@ -171,7 +171,7 @@ return {
         end
       end
 
-      vim.api.nvim_create_user_command('CopilotChatTestPrompt', function()
+      vim.api.nvim_create_user_command("CopilotChatTestPrompt", function()
         -- Print the current directory for debugging
         local cwd = vim.fn.getcwd()
         vim.api.nvim_echo({ { "Current working directory: " .. cwd, "None" } }, false, {})
@@ -194,30 +194,36 @@ return {
       end, {})
 
       -- Add save chat with name keymap
-      vim.keymap.set({ 'n' }, '<leader>in', save_chat_with_name, { desc = 'AI Save Chat (Named)' })
+      vim.keymap.set({ "n" }, "<leader>in", save_chat_with_name, { desc = "AI Save Chat (Named)" })
       -- Add load chat by name keymap
-      vim.keymap.set({ 'n' }, '<leader>ib', load_chat_by_name, { desc = 'AI Load Chat (Browse)' })
-      vim.keymap.set({ 'n' }, '<leader>ap', open_with_custom_prompt, { desc = 'AI Custom Prompt' })
-      vim.keymap.set({ 'n' }, '<leader>aa', chat.toggle, { desc = 'AI Toggle' })
-      vim.keymap.set({ 'v' }, '<leader>aa', chat.open, { desc = 'AI Open' })
-      vim.keymap.set({ 'n' }, '<leader>ax', chat.reset, { desc = 'AI Reset' })
-      vim.keymap.set({ 'n' }, '<leader>as', chat.stop, { desc = 'AI Stop' })
-      vim.keymap.set({ 'n' }, '<leader>am', function() chat.select_model() end, { desc = 'AI Models' })
-      vim.keymap.set({ 'n' }, '<leader>ag', function() chat.select_agent() end, { desc = 'AI Agents' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>asp', function() chat.select_prompt() end, { desc = 'AI Prompts' })
+      vim.keymap.set({ "n" }, "<leader>ib", load_chat_by_name, { desc = "AI Load Chat (Browse)" })
+      vim.keymap.set({ "n" }, "<leader>ap", open_with_custom_prompt, { desc = "AI Custom Prompt" })
+      vim.keymap.set({ "n" }, "<leader>aa", chat.toggle, { desc = "AI Toggle" })
+      vim.keymap.set({ "v" }, "<leader>aa", chat.open, { desc = "AI Open" })
+      vim.keymap.set({ "n" }, "<leader>ax", chat.reset, { desc = "AI Reset" })
+      vim.keymap.set({ "n" }, "<leader>as", chat.stop, { desc = "AI Stop" })
+      vim.keymap.set({ "n" }, "<leader>am", function()
+        chat.select_model()
+      end, { desc = "AI Models" })
+      vim.keymap.set({ "n" }, "<leader>ag", function()
+        chat.select_agent()
+      end, { desc = "AI Agents" })
+      vim.keymap.set({ "n", "v" }, "<leader>asp", function()
+        chat.select_prompt()
+      end, { desc = "AI Prompts" })
       -- Add save chat keymap
-      vim.keymap.set({ 'n' }, '<leader>iw', chat.save, { desc = 'AI Save Chat' })
+      vim.keymap.set({ "n" }, "<leader>iw", chat.save, { desc = "AI Save Chat" })
       -- Add load chat keymap
-      vim.keymap.set({ 'n' }, '<leader>il', chat.load, { desc = 'AI Load Chat' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>aq', function()
+      vim.keymap.set({ "n" }, "<leader>il", chat.load, { desc = "AI Load Chat" })
+      vim.keymap.set({ "n", "v" }, "<leader>aq", function()
         vim.ui.input({
-          prompt = 'AI Question> ',
+          prompt = "AI Question> ",
         }, function(input)
-          if input ~= '' then
+          if input ~= "" then
             chat.ask(input)
           end
         end)
-      end, { desc = 'AI Question' })
-    end
+      end, { desc = "AI Question" })
+    end,
   },
 }
