@@ -3,16 +3,23 @@ return {
   dependencies = {
     { 'hrsh7th/cmp-nvim-lsp' },
     { 'hrsh7th/nvim-cmp' },
-    { 'williamboman/mason.nvim' },
-    { 'williamboman/mason-lspconfig.nvim' },
+    { 'mason-org/mason.nvim' },
+    { 'mason-org/mason-lspconfig.nvim' },
   },
   config = function()
-    local cmp = require('cmp')
+    local ok_cmp, cmp = pcall(require, "cmp")
+    if not ok_cmp then
+      return
+    end
     vim.opt.signcolumn = 'yes'
 
     -- Add cmp_nvim_lsp capabilities to default LSP capabilities
     -- This provides better completion support with LSP
-    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+    local ok_cmp_lsp, cmp_lsp = pcall(require, "cmp_nvim_lsp")
+    if not ok_cmp_lsp then
+      return
+    end
+    local capabilities = cmp_lsp.default_capabilities()
 
     -- Configure TypeScript language server using the new vim.lsp.config API
     vim.lsp.config.tsserver = {
@@ -64,7 +71,10 @@ return {
     cmp.setup({
       snippet = {
         expand = function(args)
-          require('luasnip').lsp_expand(args.body)           -- For `luasnip` users.
+          local ok_luasnip, luasnip = pcall(require, "luasnip")
+          if ok_luasnip then
+            luasnip.lsp_expand(args.body)
+          end
         end,
       },
       mapping = cmp.mapping.preset.insert({
