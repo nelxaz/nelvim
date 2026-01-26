@@ -1,7 +1,7 @@
 return {
-  require("nelvim.lua.daharux.lazy.lsp"),
-  require("nelvim.lua.daharux.lazy.leap"),
-  require("nelvim.lua.daharux.lazy.conform"),
-  require("nelvim.lua.daharux.lazy.lint"),
-  require("nelvim.lua.daharux.lazy.treesitter"),
+  require("daharux.lazy.lsp"),
+  require("daharux.lazy.leap"),
+  require("daharux.lazy.conform"),
+  require("daharux.lazy.lint"),
+  require("daharux.lazy.treesitter"),
 }

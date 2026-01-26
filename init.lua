@@ -1,1 +1,1 @@
-require("nelvim.lua.daharux")
+require("daharux")
