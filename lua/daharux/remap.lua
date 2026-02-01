@@ -47,3 +47,5 @@ vim.keymap.set({ 'n' }, '<leader>cp', function()
   vim.fn.setreg('+', path)
   vim.notify("Copied: " .. path, vim.log.levels.INFO)
 end, { desc = 'Copy Buffer Path' })
+
+vim.keymap.set('n', "<leader>l", ':let @*=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>')
