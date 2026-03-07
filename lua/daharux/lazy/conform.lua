@@ -13,6 +13,7 @@ return {
     formatters.css = { "oxlint" }
     formatters.scss = { "oxlint" }
     formatters.html = { "oxlint" }
+    formatters.rust = { "rustfmt" }
 
     opts.format_on_save = opts.format_on_save or { timeout_ms = 500, lsp_fallback = true }
 
