@@ -1,3 +1,5 @@
+local capabilities = require("daharux.lsp.capabilities")
+
 local function safe_require(module)
   local ok, loaded = pcall(require, module)
   if not ok then
@@ -5,15 +7,6 @@ local function safe_require(module)
   end
 
   return loaded
-end
-
-local function get_capabilities()
-  local cmp_lsp = safe_require("cmp_nvim_lsp")
-  if not cmp_lsp then
-    return vim.lsp.protocol.make_client_capabilities()
-  end
-
-  return cmp_lsp.default_capabilities()
 end
 
 local function setup_lsp_keymaps()
@@ -100,21 +93,6 @@ local function setup_servers(capabilities)
         "mjs",
       },
     },
-    rust_analyzer = {
-      settings = {
-        ["rust-analyzer"] = {
-          cargo = {
-            allFeatures = true,
-          },
-          check = {
-            command = "clippy",
-          },
-          procMacro = {
-            enable = true,
-          },
-        },
-      },
-    },
   }
 
   local mason = safe_require("mason")
@@ -128,6 +106,10 @@ local function setup_servers(capabilities)
   mason_lspconfig.setup({
     handlers = {
       function(server_name)
+        if server_name == "rust_analyzer" then
+          return
+        end
+
         local server_config = servers[server_name] or {}
 
         vim.lsp.config[server_name] = vim.tbl_deep_extend("force", server_config, {
@@ -149,10 +131,10 @@ return {
   config = function()
     vim.opt.signcolumn = "yes"
 
-    local capabilities = get_capabilities()
+    local lsp_capabilities = capabilities.get()
 
     setup_lsp_keymaps()
-    setup_servers(capabilities)
+    setup_servers(lsp_capabilities)
     setup_completion()
     setup_diagnostics()
   end,
