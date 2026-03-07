@@ -18,6 +18,9 @@ return {
         "markdown_inline",
         "javascript",
         "typescript",
+        "rust",
+        "toml",
+        "ron"
       },
       sync_install = false,
       auto_install = true,
